@@ -1,0 +1,6 @@
+apiVersion: krossboard.krossboard.app/v1alpha1
+kind: Krossboard
+metadata:
+  name: krossboard-sample
+spec:
+  # TODO(user): Add fields here

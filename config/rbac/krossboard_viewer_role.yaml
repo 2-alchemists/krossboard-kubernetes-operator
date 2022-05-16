@@ -1,0 +1,20 @@
+# permissions for end users to view krossboards.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: krossboard-viewer-role
+rules:
+- apiGroups:
+  - krossboard.krossboard.app
+  resources:
+  - krossboards
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - krossboard.krossboard.app
+  resources:
+  - krossboards/status
+  verbs:
+  - get
