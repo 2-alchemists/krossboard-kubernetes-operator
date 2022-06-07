@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: krossboard-config
+data:
+  Caddyfile: |
+    # domain name.
+    :80
+
+    # Set this path to your site's directory.
+    root * /var/www/html
+
+    # Enable the static file server.
+    file_server
+
+    # Add reverse proxy for the API
+    route /api/* {
+      reverse_proxy 127.0.0.1:1519
+    }
+
+    # Rewrites other URI to index.html
+    route /* {
+      try_files {path} {path}/ /index.html
+    }
+
+    # Enable basic auth
+    #basicauth /* {
+    #    krossboard JDJhJDEwJGxGMmN2ZDJ4NjgycjVTbi5pRThSNGVnaWViSGpiNWpKVVpPLjRkRGNCVmV4VGtOUnBiSjRL
+    #}

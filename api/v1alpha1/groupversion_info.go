@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v1alpha1 contains API Schema definitions for the krossboard v1alpha1 API group
-//+kubebuilder:object:generate=true
-//+groupName=krossboard.krossboard.app
+// +kubebuilder:object:generate=true
+// +groupName=krossboard.krossboard.app
 package v1alpha1
 
 import (

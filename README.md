@@ -21,6 +21,13 @@ Key features:
 
 # Getting Started
 
+```
+kubectl -n krossboard create secret generic krossboard-secrets  \
+    --from-file=kubeconfig=$HOME/.kube/config \
+    --type=Opaque
+```
+
+# Links
 * [Setup Krossboard for Multi-Cloud or Cross-Kubernetes Distributions](https://krossboard.app/docs/60_deploy-for-cross-cloud-and-on-premises-kubernetes/)
 * [Setup Krossboard for Amazon EKS](https://krossboard.app/docs/50_deploy-for-amazon-eks/)
 * [Setup Krossboard for Azure AKS](https://krossboard.app/docs/30_deploy-for-azure-aks/)

@@ -72,6 +72,7 @@ func main() {
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "85261257.krossboard.app",
+		Namespace:              "krossboard",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

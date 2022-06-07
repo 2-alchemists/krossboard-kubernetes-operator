@@ -1,0 +1,6 @@
+namespace: krossboard
+resources:
+- krossboard-pvc.yaml
+- krossboard-config.yaml
+- krossboard.yaml
+- krossboard-svc.yaml

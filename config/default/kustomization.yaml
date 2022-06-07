@@ -1,16 +1,16 @@
 # Adds namespace to all resources.
-namespace: krossboard-kubernetes-operator-system
+namespace: krossboard
 
 # Value of this field is prepended to the
 # names of all resources, e.g. a deployment named
 # "wordpress" becomes "alices-wordpress".
 # Note that it should also match with the prefix (text before '-') of the namespace
 # field above.
-namePrefix: krossboard-kubernetes-operator-
+namePrefix: krossboard-
 
 # Labels to add to all resources and selectors.
-#commonLabels:
-#  someName: someValue
+commonLabels:
+  author: "2ALCHESMISTS-SAS"
 
 bases:
 - ../crd
@@ -26,7 +26,7 @@ bases:
 
 patchesStrategicMerge:
 # Protect the /metrics endpoint by putting it behind auth.
-# If you want your controller-manager to expose the /metrics
+# If you want your kb-kubernetes-operator to expose the /metrics
 # endpoint w/o any authn/z, please comment the following line.
 - manager_auth_proxy_patch.yaml
 

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: krossboard-ui
+spec:
+  ports:
+    - port: 80
+      targetPort: krossboard-ui
+  selector:
+    app: krossboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: krossboard-api
+spec:
+  ports:
+    - port: 1519
+      targetPort: krossboard-api
+  selector:
+    app: krossboard
