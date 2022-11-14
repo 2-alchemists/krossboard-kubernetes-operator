@@ -61,7 +61,7 @@ kubectl -n krossboard \
 The following command deploy the latest version of the operator.
 
 ```
-oc apply -k config/latest/
+kubectl apply -k config/latest/
 ```
 
 # Links
