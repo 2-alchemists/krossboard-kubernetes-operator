@@ -4,7 +4,7 @@ metadata:
   name: krossboard
 spec:
   koaImage: rchakode/kube-opex-analytics:2022-10-31-3f4a2f3
-  krossboardDataProcessorImage: krossboard/krossboard-data-processor:vv20221114t1668438163-ebf3676
+  krossboardDataProcessorImage: krossboard/krossboard-data-processor:v20221114t1668438163-ebf3676
   krossboardUIImage: krossboard/krossboard-ui:1.2.0-49b2666
   krossboardPersistentVolumeClaim: krossboard-data-pvc
   krossboardSecretName: krossboard-secrets
