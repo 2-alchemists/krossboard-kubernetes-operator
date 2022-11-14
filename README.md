@@ -21,14 +21,50 @@ Key features:
 
 # Getting Started
 
+## Create a namespace for krossboard
+
+Krossboard Kubernetes Operator is namespaced-scoped, and is expected to be deployed in a namespace named `krossboard`.
+
+
 ```
-kubectl -n krossboard create secret generic krossboard-secrets  \
-    --from-file=kubeconfig=$HOME/.kube/config \
+kubectl create namespace krossboard
+```
+
+## Create a KUBECONFIG secret for target Kubernetes clusters
+
+In the following command, replace `/path/to/kubeconfig` with the path towards the KUBECONFIG file that list Kubernetes clusters to be handled by Krossboard. 
+
+```
+kubectl -n krossboard \
+    create secret generic krossboard-secrets  \
+    --from-file=kubeconfig=/path/to/kubeconfig \
     --type=Opaque
 ```
 
+If you have several KUBECONFIG files and want you can proceed as below to create a secret with a merged KUBECONFIG.
+
+Set the KUBECONFIG environment variable with a comma-seperated list of your KUBECONFIG files.
+
+```
+export KUBECONFIG=/path/to/kubeconfig1;/path/to/kubeconfig2
+```
+
+Create a secret with the resulting merged KUBECONFIG.
+```
+kubectl -n krossboard \
+    create secret generic krossboard-secrets \
+    --from-file=kubeconfig=<(kubectl config view) \
+    --type=Opaque
+```
+
+## Deploy Krossboard Kubernetes Operator
+The following command deploy the latest version of the operator.
+
+```
+oc apply -k config/latest/
+```
+
 # Links
-* [Setup Krossboard for Multi-Cloud or Cross-Kubernetes Distributions](https://krossboard.app/docs/60_deploy-for-cross-cloud-and-on-premises-kubernetes/)
-* [Setup Krossboard for Amazon EKS](https://krossboard.app/docs/50_deploy-for-amazon-eks/)
-* [Setup Krossboard for Azure AKS](https://krossboard.app/docs/30_deploy-for-azure-aks/)
-* [Setup Krossboard for Google GKE](https://krossboard.app/docs/20_deploy-for-google-gke/)
+
+* https://krossboard.app/
+* [Krossboard Enterprise support](https://krossboard.app/#pricing) 
