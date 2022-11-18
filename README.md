@@ -46,14 +46,14 @@ If you have several KUBECONFIG files and want you can proceed as below to create
 Set the KUBECONFIG environment variable with a comma-seperated list of your KUBECONFIG files.
 
 ```
-export MYKUBECONFIG=/path/to/kubeconfig1;/path/to/kubeconfig2;...
+export KB_KUBECONFIG=/path/to/kubeconfig1;/path/to/kubeconfig2;...
 ```
 
 Create a secret file with the resulting merged KUBECONFIG.
 ```
 kubectl -n krossboard \
     create secret generic krossboard-secrets \
-    --from-file=kubeconfig=<(KUBECONFIG=$MYKUBECONFIG kubectl config view --raw) \
+    --from-file=kubeconfig=<(KUBECONFIG=$KB_KUBECONFIG kubectl config view --raw) \
     --type=Opaque --dry-run=client -oyaml > krossboard-secrets.yaml
 ```
 
