@@ -130,10 +130,12 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 					{
 						Name:      "krossboard-data-vol",
 						MountPath: kbDataDir,
+						ReadOnly:  false,
 					},
 					{
 						Name:      "krossboard-creds-vol",
 						MountPath: kbCredsDir,
+						ReadOnly:  false,
 					},
 				},
 				Env: []corev1.EnvVar{
@@ -174,7 +176,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 	kbContainerUsername := "krossboard"
 	koaContainerFsGroup := int64(4583)
 	koaContainerUID := int64(4583)
-	selectedClusterNames := strings.Join(clusterNames[:], "")
+	selectedClusterNames := strings.Trim(strings.Join(clusterNames[:], " "), " ")
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -282,7 +284,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 									{
 										Name:      "krossboard-data-vol",
 										MountPath: kbDataDir,
-										ReadOnly:  true,
+										ReadOnly:  false,
 									},
 									{
 										Name:      "krossboard-run-vol",
@@ -298,6 +300,18 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 									{
 										Name:  "KROSSBOARD_ROOT_DIR",
 										Value: kbDataDir,
+									},
+									{
+										Name:  "KROSSBOARD_RAWDB_DIR",
+										Value: kbDataDir,
+									},
+									{
+										Name:  "KROSSBOARD_HISTORYDB_DIR",
+										Value: kbDataDir,
+									},
+									{
+										Name:  "KROSSBOARD_RUN_DIR",
+										Value: kbRuntimeDir,
 									},
 								},
 							},

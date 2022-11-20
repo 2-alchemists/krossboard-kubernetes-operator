@@ -18,8 +18,6 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"reflect"
 	"strconv"
 	"time"
@@ -123,16 +121,14 @@ func (kbReconciler *KrossboardReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{}, err
 	}
 
-	kbPodsRaw, _ := json.Marshal(kbPods)
-	fmt.Println(string(kbPodsRaw))
-
 	kbContainers := getKrossboardContainers(kbPods.Items)
-	if !reflect.DeepEqual(kbContainers, kb.Status.KoaInstances) {
+	if !reflect.DeepEqual(kbContainers.KoaInstances, kb.Status.KoaInstances) ||
+		!reflect.DeepEqual(kbContainers.KbComponentInstances, kb.Status.KbComponentInstances) {
 		kb.Status.KoaInstances = kbContainers.KoaInstances
 		kb.Status.KbComponentInstances = kbContainers.KbComponentInstances
 		err := kbReconciler.Status().Update(ctx, kb)
 		if err != nil {
-			log.Error(err, "Failed to update Krossboard status")
+			log.Error(err, "Failed to update Krossboard status (KoaInstances)")
 			return ctrl.Result{}, err
 		}
 	}
