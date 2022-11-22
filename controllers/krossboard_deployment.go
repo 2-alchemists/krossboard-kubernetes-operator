@@ -273,6 +273,14 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 										Name:  "KROSSBOARD_RUN_DIR",
 										Value: kbRuntimeDir,
 									},
+									{
+										Name:  "KROSSBOARD_RAWDB_DIR",
+										Value: kbDataDir,
+									},
+									{
+										Name:  "KROSSBOARD_HISTORYDB_DIR",
+										Value: kbDataDir,
+									},
 								},
 							},
 							{
