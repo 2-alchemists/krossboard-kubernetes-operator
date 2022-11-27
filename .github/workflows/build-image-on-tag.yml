@@ -4,8 +4,8 @@ on:
     tags:
       - v*
 jobs:
-  build:
-    runs-on: ubuntu-18.04
+  build-image:
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v1
     - name: Build and push Docker image
