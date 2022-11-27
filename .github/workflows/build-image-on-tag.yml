@@ -13,8 +13,8 @@ jobs:
         go-version: '>=1.19.0'    
     - name: Build and push Docker image
       env:
-        DOCKERHUB_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
-        DOCKERHUB_USERNAME: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
+        IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
+        IMAGE_REGISTRY_USERNAME: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
       run: |
         # Install controller-gen
         CTL_TOOLS_VERS=0.10.0
