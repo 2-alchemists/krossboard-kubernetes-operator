@@ -1,8 +1,8 @@
 name: Docker image
 on:
-  push:
-    tags:
-      - v*
+  pull_request:
+    branches: [main]
+
 jobs:
   build-image:
     runs-on: ubuntu-20.04
@@ -24,10 +24,9 @@ jobs:
         go build -o controller-gen main.go
         export PATH=$PWD:$PATH
 
-        # Build and push image
+        # Build image
         cd -
-        export GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-        export IMAGE_TAG=$(echo $GIT_TAG | sed 's/v//')
+        export IMAGE_TAG="$(date +%F)-$(git rev-parse --short HEAD)"
         sed -i -r 's/(VERSION\s\?=\s)[0-9]+\.[0-9]+\.[0-9]+/\1'$IMAGE_TAG'/' Makefile
 
         echo "$IMAGE_REGISTRY_PASSWORD" | docker login -u $IMAGE_REGISTRY_USERNAME --password-stdin
