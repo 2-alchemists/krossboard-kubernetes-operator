@@ -1,0 +1,19 @@
+name: Docker image
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build and push Docker image
+      env:
+        DOCKERHUB_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
+        DOCKERHUB_USERNAME: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
+      run: |
+        export GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        export IMAGE_TAG=$(echo $GIT_TAG | sed 's/v//')
+        sed -i -r 's/(VERSION\s\?=\s)[0-9]+\.[0-9]+\.[0-9]+/\1'$IMAGE_TAG'/' Makefile
+        make build docker-build docker-push
