@@ -1,8 +1,8 @@
 name: Docker image
 on:
-  push:
-    tags:
-      - v*
+  pull_request:
+    branches: [main]
+
 jobs:
   build-image:
     runs-on: ubuntu-20.04
@@ -16,7 +16,6 @@ jobs:
         DOCKERHUB_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
         DOCKERHUB_USERNAME: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
       run: |
-        export GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-        export IMAGE_TAG=$(echo $GIT_TAG | sed 's/v//')
+        export IMAGE_TAG="$(date +%F)-$(git rev-parse --short HEAD)"
         sed -i -r 's/(VERSION\s\?=\s)[0-9]+\.[0-9]+\.[0-9]+/\1'$IMAGE_TAG'/' Makefile
         make build docker-build docker-push
