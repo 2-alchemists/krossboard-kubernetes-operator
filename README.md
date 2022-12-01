@@ -1,6 +1,5 @@
 <!-- vscode-markdown-toc -->
 - [Overview](#overview)
-- [Key Features](#key-features)
 - [Installation](#installation)
   - [Create a namespace for Krossboard](#create-a-namespace-for-krossboard)
   - [Create a secret for KUBECONFIG](#create-a-secret-for-kubeconfig)
@@ -15,37 +14,27 @@
 
 # Overview
 
-[Krossboard](https://www.krossboard.app/) is a multi-cluster and cross-distribution Kubernetes usage accounting and analytics software.
+[Krossboard](https://www.krossboard.app/) is a multi-cluster and cross-distribution Kubernetes usage accounting and analytics software. 
 
-Krossboard Operator (`krossboard-kubernetes-operator`) provides an operator and custom resources (CRD) to deploy and manage instances of Krossboard as Kubernetes pods.
-
-The `Krossboard` CRD (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/latest/krossboard.yaml) allows to define the container images of each Krossboard components: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics, etc.
-
-Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG resource.
-
-The KUBECONFIG resource is set via a secret within the installation namespace:
-
-* Secret Name: `krossboard-secrets` (by default).
-* Secret Key: `kubeconfig`
-
->  You can use a different secret while setting the `krossboardSecretName` accordingly (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/latest/krossboard.yaml)).
-
+> Learn about [Krossboard features](https://github.com/2-alchemists/krossboard#overview).
 
 ![](krossboard-architecture-overview.png)
 
-# Key Features
+Krossboard Operator provides custom resources (CRD) along with an operator to deploy and manage instances of Krossboard as Kubernetes pods.
 
-Highlight of Krossboard features:
+The `Krossboard` CRD (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/latest/krossboard.yaml) allows to define the container images of each Krossboard components: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics, etc.
 
-* **Multi-Kubernetes Data Collection**: Krossboard periodically collects raw metrics related to containers, pods and nodes from each Kubernetes cluster it handles. The built-in data collection period is 5 minutes.
-* **Powerful Analytics Processing**: Krossboard internally processes raw metrics to produce insightful Kubernetes usage accounting and analytics metrics. The analytics data are tracked on a hourly-basis, per namespace, per cluster, and globally.
-* **Insightful Usage Accounting**: Krossboard periodically processes usage accounting, per namespace and per cluster. By the default, the UI displays accounting the following periods without any additioanl configuration: daily accounting for the last 14 days, monthly for the ast 12 months.
-* **REST API**: This exposes the generated analytics data it generates to third-party systems.
-* **Easy to deploy**: The Krossboard operator is deployable in a couple of minutes.
+Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret:
+
+* Secret Name: `krossboard-secrets`
+* Secret Key: `kubeconfig` (base64-encoded KUBECONFIG resource).
+
+A different secret can be used (instead of `krossboard-secrets`). In this case, you must set the parameter `krossboardSecretName` of the Krossboard CRD with the name of the selected secret (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/latest/krossboard.yaml)).
+
 
 # Installation
 
-## <a name='Createanamespaceforkrossboard'></a>Create a namespace for Krossboard
+## <a name='CreateanamespaceforKrossboard'></a>Create a namespace for Krossboard
 
 Krossboard Operator is namespace-scoped, it must be deployed in the `krossboard` namespace.
 
@@ -54,19 +43,14 @@ kubectl create namespace krossboard
 ```
 
 ## <a name='CreateasecretforKUBECONFIG'></a>Create a secret for KUBECONFIG
-The Kubernetes clusters handled by Krossboard Operator are set via a secret within the installation namespace:
+The Kubernetes clusters handled by Krossboard Operator are set via a secret within the installation namespace (Secret Name: `krossboard-secrets`, Secret Key: `kubeconfig`)
 
-* Secret Name: `krossboard-secrets` (by default)
-* Secret Key: `kubeconfig`
-
-The `kubeconfig` key must be set with a base64-encoded KUBECONFIG content. The associated credentials can be of type token, client certificate, or username + password.
-
-[Learn how to create a KUBECONFIG with minimal permissions for Krossboard](./docs/create-kubeconfig-with-minimal-permissions.md).
+> Learn how to create a [KUBECONFIG with minimal permissions for Krossboard](./docs/create-kubeconfig-with-minimal-permissions.md).
 
 
-**Create a secret from a single KUBECONFIG file**
+**Create a secret from a single KUBECONFIG resource**
 
-Given a KUBECONFIG file, you can create a secret for Krossboard Operator as follows. 
+Given a KUBECONFIG resource, you can create a secret for Krossboard Operator as follows. 
 
 ```bash
 kubectl -n krossboard \
@@ -77,9 +61,9 @@ kubectl -n krossboard \
 
 Replace `/path/to/kubeconfig` with the path of the KUBECONFIG file.
 
-**Create a secret from multiple KUBECONFIG file**
+**Create a secret from multiple KUBECONFIG resources**
 
-If you have several KUBECONFIG files, you can merge them by proceeding as hereafter.
+If you have several KUBECONFIG resources, you can merge them by proceeding as hereafter.
 
 Set an environment variable with a comma-seperated list of KUBECONFIG files.
 
@@ -102,7 +86,7 @@ Review the secret file and apply it the secret file.
 kubectl apply -f ./krossboard-secrets.yaml
 ```
 
-## <a name='DeployKrossboardKubernetesOperator'></a>Deploy Krossboard Operator
+## <a name='DeployKrossboardOperator'></a>Deploy Krossboard Operator
 The following command deploy the latest version of the operator.
 
 ```bash
