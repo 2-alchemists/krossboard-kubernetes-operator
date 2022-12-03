@@ -90,7 +90,7 @@ kubectl apply -f ./krossboard-secrets.yaml
 The following command deploy the latest version of the operator.
 
 ```bash
-kubectl apply -k config/latest/
+kubectl apply -k config/krossboard/
 ```
 
 # Day2 Documentation
