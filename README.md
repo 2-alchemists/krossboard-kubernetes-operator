@@ -4,6 +4,7 @@
   - [Create a namespace for Krossboard](#create-a-namespace-for-krossboard)
   - [Create a secret for KUBECONFIG](#create-a-secret-for-kubeconfig)
   - [Deploy Krossboard Operator](#deploy-krossboard-operator)
+  - [Deploy a Krossboard Instance](#deploy-a-krossboard-instance)
 - [Day2 Documentation](#day2-documentation)
 
 <!-- vscode-markdown-toc-config
@@ -87,10 +88,17 @@ kubectl apply -f ./krossboard-secrets.yaml
 ```
 
 ## <a name='DeployKrossboardOperator'></a>Deploy Krossboard Operator
-The following command deploy the latest version of the operator.
+The following command deploy the latest version of Korssboard Operator.
 
 ```bash
-kubectl apply -k config/krossboard/
+kubectl apply -f config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml
+```
+
+## <a name='DeployKrossboardOperator'></a>Deploy a Krossboard Instance
+The following command deploy the latest version of Krossboard.
+
+```bash
+kubectl -n krossboard apply -k config/releases/latest/krossboard/
 ```
 
 # Day2 Documentation
