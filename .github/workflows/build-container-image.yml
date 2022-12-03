@@ -2,6 +2,9 @@ name: Docker image
 on:
   pull_request:
     branches: [main]
+  push:
+    tags:
+      - v*    
 
 jobs:
   build-image:
@@ -16,17 +19,27 @@ jobs:
         IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
         IMAGE_REGISTRY_USERNAME: ${{ secrets.IMAGE_REGISTRY_USERNAME }}
       run: |
-        # Install controller-gen
+        echo "↳ Installing controller-gen"
+        echo ""
         CTL_TOOLS_VERS=0.10.0
         wget -O controller-tools-${CTL_TOOLS_VERS}.zip https://github.com/kubernetes-sigs/controller-tools/archive/refs/tags/v${CTL_TOOLS_VERS}.zip
         unzip controller-tools-${CTL_TOOLS_VERS}.zip
         cd controller-tools-${CTL_TOOLS_VERS}/cmd/controller-gen
         go build -o controller-gen main.go
         export PATH=$PWD:$PATH
-
-        # Build image
         cd -
+
+        echo "↳ Computing image version"
+        echo ""
+        export GIT_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        export CHANGES_SINCE_LAST_TAG=$(git log ${GIT_TAG}..HEAD --oneline)
         export IMAGE_TAG="$(date +%F)-$(git rev-parse --short HEAD)"
+        if [ "$CHANGES_SINCE_LAST_TAG" == "" ]; then
+          export IMAGE_TAG=$(echo $GIT_TAG | sed 's/v//')
+        fi        
+
+        echo "↳ Patching source files"
+        echo ""
         sed -i -r 's/(VERSION\s\?=\s)[0-9]+\.[0-9]+\.[0-9]+/\1'$IMAGE_TAG'/' Makefile
 
         echo "$IMAGE_REGISTRY_PASSWORD" | docker login -u $IMAGE_REGISTRY_USERNAME --password-stdin
