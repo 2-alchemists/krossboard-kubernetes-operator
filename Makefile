@@ -144,8 +144,8 @@ deploy: manifests kustomize docker-push ## Deploy controller to the K8s cluster 
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default | kubectl apply -f -
 
-.PHONY: releases
-deploy-manifests: manifests kustomize docker-push ## Deploy controller to the K8s cluster specified in ~/.kube/config.
+.PHONY: release-latest
+release-latest: manifests kustomize docker-push ## Deploy controller to the K8s cluster specified in ~/.kube/config.
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default > config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml
 
