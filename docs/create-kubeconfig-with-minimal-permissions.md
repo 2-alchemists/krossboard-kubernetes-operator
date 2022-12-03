@@ -1,10 +1,11 @@
 # Create KUBECONFIG wih Minimal Permissions for Krossboard
 
 <!-- vscode-markdown-toc -->
-* [Overview](#Overview)
-* [Create RBAC Resources (Service Account, ClusterRole, ClusterRoleBinding)](#CreateRBACResourcesServiceAccountClusterRoleClusterRoleBinding)
-* [Get the Service Account Token](#GettheServiceAccountToken)
-* [Create the KUBECONFIG Resource](#CreatetheKUBECONFIGResource)
+- [Create KUBECONFIG wih Minimal Permissions for Krossboard](#create-kubeconfig-wih-minimal-permissions-for-krossboard)
+  - [Overview](#overview)
+  - [Create RBAC Resources (Service Account, ClusterRole, ClusterRoleBinding)](#create-rbac-resources-service-account-clusterrole-clusterrolebinding)
+  - [Get the Service Account Token](#get-the-service-account-token)
+  - [Create the KUBECONFIG Resource](#create-the-kubeconfig-resource)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
