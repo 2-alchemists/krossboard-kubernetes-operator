@@ -2,12 +2,12 @@
 ---
 
 <!-- vscode-markdown-toc -->
-- [Overview](#overview)
+- [Krossboard Kubernetes Operator](#krossboard-kubernetes-operator)
 - [Deploy Krossboard Kubernetes Operator](#deploy-krossboard-kubernetes-operator)
 - [Deploy a Krossboard Instance](#deploy-a-krossboard-instance)
   - [Create a Krossboard CRD](#create-a-krossboard-crd)
   - [Create a KUBECONFIG secret for target Kubernetes](#create-a-kubeconfig-secret-for-target-kubernetes)
-  - [Start the Krossboard instance](#start-the-krossboard-instance)
+  - [Start the Krossboard Instance](#start-the-krossboard-instance)
 - [Day2 Operations](#day2-operations)
 
 <!-- vscode-markdown-toc-config
@@ -16,19 +16,20 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-# Overview
+# Krossboard Kubernetes Operator
 
 [Krossboard](https://www.krossboard.app/) is a multi-cluster and cross-distribution Kubernetes usage accounting and analytics software. 
 
 > Learn about [Krossboard features](https://github.com/2-alchemists/krossboard#overview).
 
+Krossboard Operator provides custom resource definitions (CRD) along with an operator to deploy and manage instances of Krossboard as Kubernetes pods.
+
 ![](krossboard-architecture-overview.png)
 
-Krossboard Operator provides custom resources (CRD) along with an operator to deploy and manage instances of Krossboard as Kubernetes pods.
 
-The [Krossboard CRD](https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml) allows to define the container images of each Krossboard components: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics, etc.
+The [Krossboard CRD](https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml) defines a Krossboard instance as a Kind, as well as parameters to bootstrap that instance: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics instances.
 
-Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret:
+Each instance of Krossboard enables to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret:
 
 * Secret Name: `krossboard-secrets`
 * Secret Key: `kubeconfig`.
@@ -63,17 +64,16 @@ Given a KUBECONFIG resource (`/path/to/kubeconfig` in the below command), you ca
 
 ```bash
 kubectl -n krossboard \
-    create secret generic krossboard-secrets  \
-    --from-file=kubeconfig=/path/to/kubeconfig \
-    --type=Opaque
+    create secret --type=Opaque generic krossboard-secrets \
+    --from-file=kubeconfig=/path/to/kubeconfig
 ```
 
 > * Learn how to [Create a KUBECONFIG resource with minimal permissions for Krossboard](./docs/create-kubeconfig-with-minimal-permissions.md).
 > * Learn how to [Create a secret from several KUBECONFIG resources](./docs/create-kubeconfig-secret.md)
 
 
-## <a name='StarttheKrossboardinstance'></a>Start the Krossboard instance
-The following command deploy an instance of Krossboard based on the latest version.
+## <a name='StarttheKrossboardInstance'></a>Start the Krossboard Instance
+The below command deploys an instance of Krossboard based on the latest version.
 
 ```bash
 kubectl -n krossboard apply -f https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-deployment.yaml
