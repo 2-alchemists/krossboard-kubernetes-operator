@@ -1,6 +1,9 @@
+![license](https://img.shields.io/github/license/2-alchemists/krossboard-kubernetes-operator.svg?label=License&style=for-the-badge)
+---
+
 <!-- vscode-markdown-toc -->
 - [Overview](#overview)
-- [Deploy Krossboard Operator](#deploy-krossboard-operator)
+- [Deploy Krossboard Kubernetes Operator](#deploy-krossboard-kubernetes-operator)
 - [Deploy a Krossboard Instance](#deploy-a-krossboard-instance)
   - [Create a Krossboard CRD](#create-a-krossboard-crd)
   - [Create a KUBECONFIG secret for target Kubernetes](#create-a-kubeconfig-secret-for-target-kubernetes)
@@ -23,35 +26,36 @@
 
 Krossboard Operator provides custom resources (CRD) along with an operator to deploy and manage instances of Krossboard as Kubernetes pods.
 
-The `Krossboard` CRD (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/releases/latest/krossboard/krossboard.yaml) allows to define the container images of each Krossboard components: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics, etc.
+The [Krossboard CRD](https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml) allows to define the container images of each Krossboard components: krossboard-api, krossboard-ui, krossboard-consolidator, krossboard-kubeconfig-handler, kube-opex-analytics, etc.
 
 Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret:
 
 * Secret Name: `krossboard-secrets`
-* Secret Key: `kubeconfig` (base64-encoded KUBECONFIG resource).
+* Secret Key: `kubeconfig`.
 
-A different secret can be used (instead of `krossboard-secrets`). In this case, you must set the parameter `krossboardSecretName` of the Krossboard CRD with the name of the selected secret (see [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/releases/latest/krossboard/krossboard.yaml)).
+The next steps describe how to deploy the operator and a Krossboard instance.
 
-
-# <a name='DeployKrossboardOperator'></a>Deploy Krossboard Operator
-The following command deploy the latest version of Korssboard Operator.
+# <a name='DeployKrossboardOperator'></a>Deploy Krossboard Kubernetes Operator
+The following command deploy the latest version of Krossboard Operator.
 
 ```bash
-kubectl apply -f config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-kubernetes-operator.yaml
 ```
 
-This installation is achieved in a namespace named `krossboard`, which is created beforehand.
+The installation is achieved in a namespace named `krossboard`.
 
 
 # <a name='DeployaKrossboardInstance'></a>Deploy a Krossboard Instance
 
-## <a name='DefineaKrossboardCRD'></a>Create a Krossboard CRD
+## <a name='CreateaKrossboardCRD'></a>Create a Krossboard CRD
 
 Once the operator deployed, a custom resource named `Krossboard` is created. This CRD is used to define each instance of Krossboard.
 
 See [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/releases/latest/krossboard/krossboard.yaml) for an example of Krossboard instance definition.
 
-Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret (Secret Name: `krossboard-secrets`, Secret Key: `kubeconfig`).
+Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret (Secret Name: `krossboard-secrets`, Secret Key: `kubeconfig`). 
+
+> A different secret can be used (instead of `krossboard-secrets`). In this case, you must set the parameter `krossboardSecretName` of the Krossboard CRD with the name of the target secret.
 
 
 ## <a name='CreateaKUBECONFIGsecretfortargetKubernetes'></a>Create a KUBECONFIG secret for target Kubernetes
@@ -64,8 +68,8 @@ kubectl -n krossboard \
     --type=Opaque
 ```
 
-> * Learn how to [create a KUBECONFIG resource with minimal permissions for Krossboard](./docs/create-kubeconfig-with-minimal-permissions.md).
-> * Learn how to [create a secret from several KUBECONFIG resources](./docs/create-kubeconfig-secret.md)
+> * Learn how to [Create a KUBECONFIG resource with minimal permissions for Krossboard](./docs/create-kubeconfig-with-minimal-permissions.md).
+> * Learn how to [Create a secret from several KUBECONFIG resources](./docs/create-kubeconfig-secret.md)
 
 
 ## <a name='StarttheKrossboardinstance'></a>Start the Krossboard instance
