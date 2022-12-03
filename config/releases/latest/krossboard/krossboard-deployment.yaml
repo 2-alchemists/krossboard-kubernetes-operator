@@ -1,0 +1,79 @@
+apiVersion: v1
+data:
+  Caddyfile: |
+    # domain name.
+    :80
+
+    # Set this path to your site's directory.
+    root * /var/www/html
+
+    # Enable the static file server.
+    file_server
+
+    # Add reverse proxy for the API
+    route /api/* {
+      reverse_proxy 127.0.0.1:1519
+    }
+
+    # Rewrites other URI to index.html
+    route /* {
+      try_files {path} {path}/ /index.html
+    }
+
+    # Enable basic auth
+    #basicauth /* {
+    #    krossboard JDJhJDEwJGxGMmN2ZDJ4NjgycjVTbi5pRThSNGVnaWViSGpiNWpKVVpPLjRkRGNCVmV4VGtOUnBiSjRL
+    #}
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: krossboard-config
+  namespace: krossboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: krossboard-api
+  namespace: krossboard
+spec:
+  ports:
+  - port: 1519
+    targetPort: krossboard-api
+  selector:
+    app: krossboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: krossboard-ui
+  namespace: krossboard
+spec:
+  ports:
+  - port: 80
+    targetPort: krossboard-ui
+  selector:
+    app: krossboard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: krossboard-data-pvc
+  namespace: krossboard
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: krossboard.krossboard.app/v1alpha1
+kind: Krossboard
+metadata:
+  name: krossboard
+  namespace: krossboard
+spec:
+  koaImage: rchakode/kube-opex-analytics:2022.12.0
+  krossboardDataProcessorImage: krossboard/krossboard-data-processor:1.3.0
+  krossboardPersistentVolumeClaim: krossboard-data-pvc
+  krossboardSecretName: krossboard-secrets
+  krossboardUIImage: krossboard/krossboard-ui:1.2.0-49b2666

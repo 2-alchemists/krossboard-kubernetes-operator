@@ -76,7 +76,7 @@ kubectl -n krossboard \
 The following command deploy an instance of Krossboard based on the latest version.
 
 ```bash
-kubectl -n krossboard apply -k config/releases/latest/krossboard/
+kubectl -n krossboard apply -f https://raw.githubusercontent.com/2-alchemists/krossboard-kubernetes-operator/main/config/releases/latest/krossboard/krossboard-deployment.yaml
 ```
 
 # Day2 Operations
