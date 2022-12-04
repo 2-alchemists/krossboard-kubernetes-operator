@@ -20,7 +20,7 @@
 
 [Krossboard](https://www.krossboard.app/) is a multi-cluster and cross-distribution Kubernetes usage accounting and analytics software. 
 
-> Learn about [Krossboard features](https://github.com/2-alchemists/krossboard#overview).
+> Learn about [Krossboard Features](./docs/what-is-krossboard.md).
 
 Krossboard Operator provides custom resource definitions (CRD) along with an operator to deploy and manage instances of Krossboard as Kubernetes pods.
 

@@ -1,3 +1,7 @@
+
+
+
+
 # Create KUBECONFIG wih Minimal Permissions for Krossboard
 
 <!-- vscode-markdown-toc -->
