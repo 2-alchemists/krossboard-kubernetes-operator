@@ -3,9 +3,8 @@ kind: Krossboard
 metadata:
   name: krossboard
 spec:
-  koaImage: rchakode/kube-opex-analytics:2022.12.0
+  koaImage: rchakode/kube-opex-analytics:22.12.0
   krossboardDataProcessorImage: krossboard/krossboard-data-processor:1.3.0
   krossboardUIImage: krossboard/krossboard-ui:1.2.0-49b2666
   krossboardPersistentVolumeClaim: krossboard-data-pvc
   krossboardSecretName: krossboard-secrets
- 
