@@ -20,8 +20,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	krossboardv1alpha1 "krossboard-kubernetes-operator/api/v1alpha1"
 	"strings"
+
+	krossboardv1alpha1 "krossboard-kubernetes-operator/api/v1alpha1"
 
 	"github.com/google/uuid"
 	appsv1 "k8s.io/api/apps/v1"
@@ -36,7 +37,6 @@ const KbReplicaCount = 1
 
 // deploymentForKrossboard returns a krossboard Deployment object
 func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Krossboard, ctx context.Context, req ctrl.Request) *appsv1.Deployment {
-
 	log := ctrllog.FromContext(ctx).WithName("krossboard-kubernetes-operator")
 
 	kbLabels := labelsForKrossboard(m.Name)

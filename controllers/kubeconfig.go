@@ -18,9 +18,10 @@
 package controllers
 
 import (
-	log "github.com/sirupsen/logrus"
 	"os/exec"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/buger/jsonparser"
 	"github.com/pkg/errors"
@@ -52,7 +53,6 @@ type ManagedCluster struct {
 
 // GetManagedClusters lists Kubernetes clusters available in KUBECONFIG
 func (m *KubeConfigManager) GetManagedClusters() map[string]*ManagedCluster {
-
 	managedClusters := make(map[string]*ManagedCluster)
 	for _, path := range m.Paths {
 		config, err := kclient.LoadFromFile(path)
@@ -81,7 +81,6 @@ func (m *KubeConfigManager) GetManagedClustersFromData(data []byte) (map[string]
 
 // GetManagedClustersFromConfig lists Kubernetes clusters from a provided KUBECONFIG
 func (m *KubeConfigManager) GetManagedClustersFromConfig(config *kapi.Config) map[string]*ManagedCluster {
-
 	managedClusters := make(map[string]*ManagedCluster)
 
 	// FIXME: check usefulness
