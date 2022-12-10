@@ -37,7 +37,7 @@ import (
 	kbapi "krossboard-kubernetes-operator/api/v1alpha1"
 )
 
-// KrossboardReconciler reconciles a Krossboard object
+// KrossboardReconciler reconciles a Krossboard object.
 type KrossboardReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
@@ -77,7 +77,7 @@ func (kbReconciler *KrossboardReconciler) Reconcile(ctx context.Context, req ctr
 	kbDeployment := &appsv1.Deployment{}
 	err = kbReconciler.Get(ctx, types.NamespacedName{Name: kb.Name, Namespace: kb.Namespace}, kbDeployment)
 	if err != nil && errors.IsNotFound(err) {
-		dep := kbReconciler.deploymentForKrossboard(kb, ctx, req)
+		dep := kbReconciler.deploymentForKrossboard(ctx, kb, req)
 		log.Info("Creating a new Deployment", "Deployment.Namespace", dep.Namespace, "Deployment.Name", dep.Name)
 		err = kbReconciler.Create(ctx, dep)
 		if err != nil {
@@ -142,7 +142,7 @@ func labelsForKrossboard(name string) map[string]string {
 	return map[string]string{"app": "krossboard", "krossboard-kubernetes-operator": name}
 }
 
-// getKrossboardContainers returns a KrossboardStatus object
+// getKrossboardContainers returns a KrossboardStatus object.
 func getKrossboardContainers(pods []corev1.Pod) *kbapi.KrossboardStatus {
 	kbStatus := &kbapi.KrossboardStatus{}
 	for _, pod := range pods {
@@ -183,9 +183,9 @@ func getKrossboardContainers(pods []corev1.Pod) *kbapi.KrossboardStatus {
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *KrossboardReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (kbReconciler *KrossboardReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&kbapi.Krossboard{}).
 		Owns(&appsv1.Deployment{}).
-		Complete(r)
+		Complete(kbReconciler)
 }

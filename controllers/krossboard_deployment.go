@@ -20,8 +20,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	krossboardv1alpha1 "krossboard-kubernetes-operator/api/v1alpha1"
 	"strings"
+
+	krossboardv1alpha1 "krossboard-kubernetes-operator/api/v1alpha1"
 
 	"github.com/google/uuid"
 	appsv1 "k8s.io/api/apps/v1"
@@ -34,15 +35,16 @@ import (
 
 const KbReplicaCount = 1
 
-// deploymentForKrossboard returns a krossboard Deployment object
-func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Krossboard, ctx context.Context, req ctrl.Request) *appsv1.Deployment {
-
+// deploymentForKrossboard returns a krossboard Deployment object.
+func (kbReconciler *KrossboardReconciler) deploymentForKrossboard(
+	ctx context.Context, m *krossboardv1alpha1.Krossboard, req ctrl.Request,
+) *appsv1.Deployment {
 	log := ctrllog.FromContext(ctx).WithName("krossboard-kubernetes-operator")
 
 	kbLabels := labelsForKrossboard(m.Name)
 	kbDataDir := "/krossboard/db"
-	kbK8sSecretsDir := "/krossboard/secrets"
-	kbCredsDir := "/krossboard/creds"
+	kbK8sSecretsDir := "/krossboard/secrets" //nolint:gosec
+	kbCredsDir := "/krossboard/creds"        //nolint:gosec
 	kbRuntimeDir := "/krossboard/run"
 
 	kbProcessorImage := m.Spec.KrossboardDataProcessorImage
@@ -50,9 +52,9 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 		kbProcessorImage = "krossboard/krossboard-data-processor:latest"
 	}
 
-	kbUiImage := m.Spec.KrossboardUIImage
-	if strings.TrimSpace(kbUiImage) == "" {
-		kbUiImage = "krossboard/krossboard-ui:latest"
+	kbUIImage := m.Spec.KrossboardUIImage
+	if strings.TrimSpace(kbUIImage) == "" {
+		kbUIImage = "krossboard/krossboard-ui:latest"
 	}
 
 	koaImage := m.Spec.KoaImage
@@ -62,7 +64,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 
 	kbSecretName := m.Spec.KrossboardSecretName
 	if strings.TrimSpace(kbSecretName) == "" {
-		kbSecretName = "krossboard-secrets"
+		kbSecretName = "krossboard-secrets" //nolint:gosec
 	}
 
 	kbPersistentVolumeClaim := m.Spec.KrossboardPersistentVolumeClaim
@@ -76,7 +78,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 	}
 
 	kbSecretResult := &corev1.Secret{}
-	err := r.Client.Get(ctx, secretQuery, kbSecretResult)
+	err := kbReconciler.Client.Get(ctx, secretQuery, kbSecretResult)
 	if err != nil {
 		log.Error(err, "failed to get secret", "Secret.Name", kbSecretName)
 		return &appsv1.Deployment{}
@@ -86,7 +88,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 
 	// Credentials of managed clusters are primarily expected in the 'managedClusters' key
 	secretDataB64, secretKeyFound := kbSecretResult.Data["managedClusters"]
-	if secretKeyFound {
+	if secretKeyFound { //nolint:nestif
 		log.Info("using managedClusters key in secret", "Secret.Name", kbSecretName)
 		err := json.Unmarshal(secretDataB64, managedClusters)
 		if err != nil {
@@ -113,7 +115,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 
 	koaContainers := []corev1.Container{}
 	koaContainerPort := int32(5483)
-	clusterNames := make([]string, len(*managedClusters))
+	clusterNames := make([]string, 0, len(*managedClusters))
 	for _, managedCluster := range *managedClusters {
 		clusterNames = append(clusterNames, managedCluster.Name)
 		koaContainerName := fmt.Sprintf("kube-opex-analytics-%v", uuid.New().String())
@@ -169,14 +171,14 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 					},
 				},
 			})
-		koaContainerPort += 1
+		koaContainerPort++
 	}
 
 	kbReplicas := int32(KbReplicaCount)
 	kbContainerUsername := "krossboard"
 	koaContainerFsGroup := int64(4583)
 	koaContainerUID := int64(4583)
-	selectedClusterNames := strings.Trim(strings.Join(clusterNames[:], " "), " ")
+	selectedClusterNames := strings.Trim(strings.Join(clusterNames, " "), " ")
 
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -224,7 +226,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 					Containers: append(
 						[]corev1.Container{
 							{
-								Image: kbUiImage,
+								Image: kbUIImage,
 								Name:  "krossboard-ui",
 								Ports: []corev1.ContainerPort{{
 									ContainerPort: 80,
@@ -425,6 +427,7 @@ func (r *KrossboardReconciler) deploymentForKrossboard(m *krossboardv1alpha1.Kro
 		}
 	}
 
-	ctrl.SetControllerReference(m, dep, r.Scheme)
+	_ = ctrl.SetControllerReference(m, dep, kbReconciler.Scheme)
+
 	return dep
 }

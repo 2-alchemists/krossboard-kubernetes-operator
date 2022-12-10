@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// KoaInstance defines a state of a kube-opex-analytics instance
+// KoaInstance defines a state of a kube-opex-analytics instance.
 type KoaInstance struct {
 	Name               string `json:"name,omitempty"`
 	ContainerPort      int64  `json:"containerPort,omitempty"`
@@ -28,13 +28,13 @@ type KoaInstance struct {
 	ClusterEndpointURL string `json:"clusterEndpoint,omitempty"`
 }
 
-// KbComponentInstance defines a the state of a Krossboard component instance
+// KbComponentInstance defines a the state of a Krossboard component instance.
 type KbComponentInstance struct {
 	Name          string `json:"name,omitempty"`
 	ContainerPort int64  `json:"containerPort,omitempty"`
 }
 
-// KrossboardSpec defines the desired state of Krossboard
+// KrossboardSpec defines the desired state of Krossboard.
 type KrossboardSpec struct {
 	// KrossboardUIImage sets Krossboard UI image
 	//+kubebuilder:default="krossboard/krossboard-ui:latest"
@@ -61,7 +61,7 @@ type KrossboardSpec struct {
 	UseGKEIdentity bool `json:"useGKEIdentity,omitempty"`
 }
 
-// KrossboardStatus defines the observed state of Krossboard
+// KrossboardStatus defines the observed state of Krossboard.
 type KrossboardStatus struct {
 	// KoaInstances contains a list of kube-opex-analytics instances
 	KoaInstances         []KoaInstance         `json:"koaInstances"`
@@ -82,7 +82,7 @@ type Krossboard struct {
 
 //+kubebuilder:object:root=true
 
-// KrossboardList contains a list of Krossboard
+// KrossboardList contains a list of Krossboard.
 type KrossboardList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
