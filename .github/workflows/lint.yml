@@ -1,0 +1,55 @@
+name: Lint
+
+on:
+  workflow_call:
+
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-go:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Find changed go files
+        id: changed-go-files
+        uses: tj-actions/changed-files@v34.5.1
+        with:
+          files: |
+            **/*.go
+            go.mod
+            go.sum
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v3.3.1
+        if: steps.changed-go-files.outputs.any_changed == 'true'
+        with:
+          go-version: "1.19"
+
+      - name: Lint go code (golangci-lint)
+        uses: golangci/golangci-lint-action@v3
+        if: steps.changed-go-files.outputs.any_changed == 'true'
+        with:
+          version: v1.49
+
+      - name: Lint go code (gofumpt)
+        if: steps.changed-go-files.outputs.any_changed == 'true'
+        run: |
+          go install mvdan.cc/gofumpt@v0.4.0
+          if [ "$(gofumpt -l .)" != "" ]; then
+            echo "❌ Code is not gofumpt!"
+            exit 1
+          fi
+          echo "✅ Code is gofumpt!"
