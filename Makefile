@@ -96,20 +96,24 @@ generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
 .PHONY: fmt
-fmt: ## Run go fmt against code.
-	go fmt ./...
+fmt: ./bin/gofumpt ## Run go fmt against code.
+	./bin/gofumpt -l -w .
+
+./bin/gofumpt:
+	echo "installing $(notdir $@)"
+	GOBIN=${CURDIR}/bin go install mvdan.cc/gofumpt@v0.4.0
 
 .PHONY: golangci
 golangci: ./bin/golangci-lint ## Run golangci against code.
 	./bin/golangci-lint run -v ./...
 
-.PHONY: test
-test: manifests generate fmt golangci envtest ## Run tests.
-	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
-
 ./bin/golangci-lint:
 	echo "installing $(notdir $@)"
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.1
+
+.PHONY: test
+test: manifests generate fmt golangci envtest ## Run tests.
+	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
 
 ##@ Build
 
