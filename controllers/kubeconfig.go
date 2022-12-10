@@ -37,12 +37,12 @@ const (
 	AuthTypeBasicToken  = 3
 )
 
-// KubeConfigManager holds an object describing a K8s Cluster
+// KubeConfigManager holds an object describing a K8s Cluster.
 type KubeConfigManager struct {
 	Paths []string `json:"path,omitempty"`
 }
 
-// ManagedCluster holds an object describing managed clusters
+// ManagedCluster holds an object describing managed clusters.
 type ManagedCluster struct {
 	Name        string         `json:"name,omitempty"`
 	APIEndpoint string         `json:"apiEndpoint,omitempty"`
@@ -51,7 +51,7 @@ type ManagedCluster struct {
 	AuthType    int            `json:"authType,omitempty"`
 }
 
-// GetManagedClusters lists Kubernetes clusters available in KUBECONFIG
+// GetManagedClusters lists Kubernetes clusters available in KUBECONFIG.
 func (m *KubeConfigManager) GetManagedClusters() map[string]*ManagedCluster {
 	managedClusters := make(map[string]*ManagedCluster)
 	for _, path := range m.Paths {
@@ -70,7 +70,7 @@ func (m *KubeConfigManager) GetManagedClusters() map[string]*ManagedCluster {
 	return managedClusters
 }
 
-// GetManagedClustersFromData lists Kubernetes clusters from a provided KUBECONFIG data
+// GetManagedClustersFromData lists Kubernetes clusters from a provided KUBECONFIG data.
 func (m *KubeConfigManager) GetManagedClustersFromData(data []byte) (map[string]*ManagedCluster, error) {
 	config, err := kclient.Load(data)
 	if err != nil {
@@ -79,7 +79,7 @@ func (m *KubeConfigManager) GetManagedClustersFromData(data []byte) (map[string]
 	return m.GetManagedClustersFromConfig(config), nil
 }
 
-// GetManagedClustersFromConfig lists Kubernetes clusters from a provided KUBECONFIG
+// GetManagedClustersFromConfig lists Kubernetes clusters from a provided KUBECONFIG.
 func (m *KubeConfigManager) GetManagedClustersFromConfig(config *kapi.Config) map[string]*ManagedCluster {
 	managedClusters := make(map[string]*ManagedCluster)
 
@@ -107,7 +107,7 @@ func (m *KubeConfigManager) GetManagedClustersFromConfig(config *kapi.Config) ma
 	return managedClusters
 }
 
-// GetAccessToken retrieves access token from AuthInfo
+// GetAccessToken retrieves access token from AuthInfo.
 func (m *KubeConfigManager) GetAccessToken(authInfo *kapi.AuthInfo) (string, error) {
 	if authInfo == nil {
 		return "", errors.New("no AuthInfo provided")
@@ -119,13 +119,14 @@ func (m *KubeConfigManager) GetAccessToken(authInfo *kapi.AuthInfo) (string, err
 
 	authHookCmd := ""
 	var args []string
-	if authInfo.AuthProvider != nil {
+	switch {
+	case authInfo.AuthProvider != nil:
 		authHookCmd = authInfo.AuthProvider.Config["cmd-path"]
 		args = strings.Split(authInfo.AuthProvider.Config["cmd-args"], " ")
-	} else if authInfo.Exec != nil {
+	case authInfo.Exec != nil:
 		authHookCmd = authInfo.Exec.Command
 		args = authInfo.Exec.Args
-	} else {
+	default:
 		return "", errors.New("no AuthInfo command provided")
 	}
 
