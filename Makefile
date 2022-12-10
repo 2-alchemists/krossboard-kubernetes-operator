@@ -99,22 +99,26 @@ generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and
 fmt: ## Run go fmt against code.
 	go fmt ./...
 
-.PHONY: vet
-vet: ## Run go vet against code.
-	go vet ./...
+.PHONY: golangci
+golangci: ./bin/golangci-lint ## Run golangci against code.
+	./bin/golangci-lint run -v ./...
 
 .PHONY: test
-test: manifests generate fmt vet envtest ## Run tests.
+test: manifests generate fmt golangci envtest ## Run tests.
 	KUBEBUILDER_ASSETS="$(shell $(ENVTEST) use $(ENVTEST_K8S_VERSION) -p path)" go test ./... -coverprofile cover.out
+
+./bin/golangci-lint:
+	echo "installing $(notdir $@)"
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.1
 
 ##@ Build
 
 .PHONY: build
-build: generate fmt vet ## Build manager binary.
+build: generate fmt golangci ## Build manager binary.
 	go build -o bin/manager main.go
 
 .PHONY: run
-run: manifests generate fmt vet ## Run a controller from your host.
+run: manifests generate fmt golangci ## Run a controller from your host.
 	go run ./main.go
 
 .PHONY: docker-build

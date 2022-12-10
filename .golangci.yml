@@ -1,0 +1,60 @@
+run:
+  timeout: 10m
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - contextcheck
+    - cyclop
+    - dupl
+    - durationcheck
+    - errname
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - goimports
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - lll
+    - makezero
+    - nakedret
+    - nestif
+    - nilerr
+    - noctx
+    - prealloc
+    - predeclared
+    - promlinter
+    - revive
+    - stylecheck
+    - tenv
+    - tparallel
+    - unconvert
+    - unparam
+    - whitespace
+
+linters-settings:
+  cyclop:
+    max-complexity: 20
+    skip-tests: true
+  godot:
+    scope: declarations # comments to be checked: `declarations` (default), `toplevel`, or `all`
+  lll:
+    line-length: 135
+output:
+  uniq-by-line: false
