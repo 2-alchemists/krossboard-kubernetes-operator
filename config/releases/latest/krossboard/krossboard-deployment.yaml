@@ -76,4 +76,4 @@ spec:
   krossboardDataProcessorImage: krossboard/krossboard-data-processor:1.3.0
   krossboardPersistentVolumeClaim: krossboard-data-pvc
   krossboardSecretName: krossboard-secrets
-  krossboardUIImage: krossboard/krossboard-ui:1.2.0-49b2666
+  krossboardUIImage: krossboard/krossboard-ui:1.2.1
