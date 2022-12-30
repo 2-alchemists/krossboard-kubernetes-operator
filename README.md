@@ -1,4 +1,6 @@
+[![lint](https://img.shields.io/github/actions/workflow/status/2-alchemists/krossboard-kubernetes-operator/lint.yml?label=Lint&style=for-the-badge&logo=github)](https://github.com/2-alchemists/krossboard-kubernetes-operator/actions/workflows/lint.yml)
 ![license](https://img.shields.io/github/license/2-alchemists/krossboard-kubernetes-operator.svg?label=License&style=for-the-badge)
+
 ---
 
 <!-- vscode-markdown-toc -->
