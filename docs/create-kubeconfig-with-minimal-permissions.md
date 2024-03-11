@@ -46,8 +46,8 @@ The created RBAC resources include the following:
 The following command outputs the token associated to the service account `kube-opex-analytics`.
 
 ```bash
-oc -n kube-opex-analytics get secret \
-    $(oc -n kube-opex-analytics get sa kube-opex-analytics -ojsonpath='{.secrets[0].name}') \
+kubectl -n kube-opex-analytics get secret \
+    $(kubectl -n kube-opex-analytics get sa kube-opex-analytics -ojsonpath='{.secrets[0].name}') \
     -ojsonpath='{.data.token}'  | base64 -d 
 ```
 
