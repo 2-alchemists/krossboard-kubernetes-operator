@@ -4,7 +4,7 @@
 
 # Create KUBECONFIG wih Minimal Permissions for Krossboard
 
-<!-- vscode-markdown-toc -->
+<!-- vscode-markdown-tkubectl -->
 - [Create KUBECONFIG wih Minimal Permissions for Krossboard](#create-kubeconfig-wih-minimal-permissions-for-krossboard)
   - [Overview](#overview)
   - [Create RBAC Resources (Service Account, ClusterRole, ClusterRoleBinding)](#create-rbac-resources-service-account-clusterrole-clusterrolebinding)
@@ -15,7 +15,7 @@
 	numbering=false
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+<!-- /vscode-markdown-tkubectl -->
 
 ## <a name='Overview'></a>Overview
 This document describes step-by-step how to create a KUBECONFIG resource with minimal RBAC permissions for Krossboard.
@@ -46,9 +46,7 @@ The created RBAC resources include the following:
 The following command outputs the token associated to the service account `kube-opex-analytics`.
 
 ```bash
-kubectl -n kube-opex-analytics get secret \
-    $(kubectl -n kube-opex-analytics get sa kube-opex-analytics -ojsonpath='{.secrets[0].name}') \
-    -ojsonpath='{.data.token}'  | base64 -d 
+kubectl -n kube-opex-analytics get secret kube-opex-analytics -ojsonpath='{.data.token}'  | base64 -d
 ```
 
 
@@ -67,20 +65,20 @@ Make sure to update the following parameters:
 apiVersion: v1
 clusters:
 - cluster:
-    certificate-authority-data: <cluster-cacert>
-    server: https://your-k8s-cluster-api:6443
-  name: <cluster-name>
+    certificate-authority-data: <K8s-CLUSTER-CACERT>
+    server: https://K8s-CLUSTER-API:6443
+  name: <K8s-CLUSTER-NAME>
 contexts:
 - context:
-    cluster:  <cluster-name>
-    user:  <cluster-name>_serviceaccount_kube-opex-analytics
-  name:  <cluster-name>
-current-context:  <cluster-name>
+    cluster:  <K8s-CLUSTER-NAME>
+    user:  <K8s-CLUSTER-NAME>_serviceaccount_kube-opex-analytics
+  name:  <K8s-CLUSTER-NAME>
+current-context:  <K8s-CLUSTER-NAME>
 kind: Config
 preferences: {}
 users:
-- name:  <cluster-name>_serviceaccount_kube-opex-analytics
+- name:  <K8s-CLUSTER-NAME>_serviceaccount_kube-opex-analytics
   user:
-    token: <service-account-token-here>
+    token: <KUBE-OPEX-ANALYTICS-SERVICE-ACCOUNT-TOKEN>
 ```
 

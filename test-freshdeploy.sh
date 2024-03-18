@@ -11,7 +11,7 @@ make build docker-build docker-push
 make deploy
 
 # get SA token
-# oc -n kube-opex-analytics get secret $(oc -n kube-opex-analytics get sa kube-opex-analytics -ojsonpath='{.secrets[0].name}') -ojsonpath='{.data.token}'  | base64 -d > token
+# kubectl -n kube-opex-analytics get secret $(kubectl -n kube-opex-analytics get sa kube-opex-analytics -ojsonpath='{.secrets[0].name}') -ojsonpath='{.data.token}'  | base64 -d > token
 
 export KB_KUBECONFIG=/home/codespace/.kube/config-sa-token
 kubectl -n krossboard \
@@ -21,6 +21,6 @@ kubectl -n krossboard \
 
 kubectl apply -f krossboard-secrets.yaml    
 
-oc apply -k config/latest/
+kubectl apply -k config/latest/
 
 docker system prune -f -a

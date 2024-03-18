@@ -8,10 +8,10 @@ This page provides a general guide to create a secret based on one or more KUBEC
 
 When you have several KUBECONFIG resources, the idea of the procedure described hereafyer is to create a merged version before creating the secret.
 
-First, set an environment variable with a comma-seperated list of KUBECONFIG files.
+First, set an environment variable with a colon-seperated list of KUBECONFIG files.
 
 ```bash
-export KB_KUBECONFIG=/path/to/kubeconfig1;/path/to/kubeconfig2;...
+export KB_KUBECONFIG=/path/to/kubeconfig1:/path/to/kubeconfig2:...
 ```
 
 Generate a secret file with the resulting KUBECONFIG.

@@ -72,7 +72,7 @@ metadata:
   name: krossboard
   namespace: krossboard
 spec:
-  koaImage: rchakode/kube-opex-analytics:22.12.0
+  koaImage: rchakode/kube-opex-analytics:24.03.3
   krossboardDataProcessorImage: krossboard/krossboard-data-processor:1.3.0
   krossboardPersistentVolumeClaim: krossboard-data-pvc
   krossboardSecretName: krossboard-secrets

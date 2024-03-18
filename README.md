@@ -3,7 +3,7 @@
 
 ---
 
-<!-- vscode-markdown-toc -->
+<!-- vscode-markdown-tkubectl -->
 - [What is Krossboard Kubernetes Operator](#what-is-krossboard-kubernetes-operator)
 - [Deploy Krossboard Kubernetes Operator](#deploy-krossboard-kubernetes-operator)
 - [Deploy a Krossboard Instance](#deploy-a-krossboard-instance)
@@ -16,7 +16,7 @@
 	numbering=false
 	autoSave=true
 	/vscode-markdown-toc-config -->
-<!-- /vscode-markdown-toc -->
+<!-- /vscode-markdown-tkubectl -->
 
 # What is Krossboard Kubernetes Operator
 
@@ -44,26 +44,40 @@ kubectl apply -f https://raw.githubusercontent.com/2-alchemists/krossboard-kuber
 
 The installation is achieved in a namespace named `krossboard`.
 
-
 # <a name='DeployaKrossboardInstance'></a>Deploy a Krossboard Instance
 
 ## <a name='CreateaKrossboardCR'></a>Create a Krossboard CR
 
 Once the operator deployed, a custom resource named `Krossboard` is created. This CR is used to define each instance of Krossboard.
 
-See [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/releases/latest/krossboard/krossboard.yaml) for an example of Krossboard instance 
+See [krossboard.yaml](https://github.com/2-alchemists/krossboard-kubernetes-operator/blob/main/config/releases/latest/krossboard/krossboard.yaml) for an example to a Krossboard instance along with its persistent volume claim.
 
 ```yaml
+---
 apiVersion: krossboard.krossboard.app/v1alpha1
 kind: Krossboard
 metadata:
   name: krossboard
+  namespace: krossboard
 spec:
-  koaImage: rchakode/kube-opex-analytics:22.12.0
+  koaImage: rchakode/kube-opex-analytics:24.03.3
   krossboardDataProcessorImage: krossboard/krossboard-data-processor:1.3.0
   krossboardUIImage: krossboard/krossboard-ui:1.2.0-49b2666
   krossboardPersistentVolumeClaim: krossboard-data-pvc
   krossboardSecretName: krossboard-secrets
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: krossboard-data-pvc
+  namespace: krossboard
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+#  storageClassName: uncomment-and-set-if-not-using-default
 ```
 
 Each instance of Krossboard allows to track the usage of a set of Kubernetes clusters listed in a KUBECONFIG secret. 
